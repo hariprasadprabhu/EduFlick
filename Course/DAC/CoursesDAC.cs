@@ -113,5 +113,41 @@ namespace Course.DAC
             }
 
         }
+        public void AddQuiz(Quiz quiz,int courseid)
+        {
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                using (SqlCommand cmd = new SqlCommand("usp_AddQuiz", con))
+                {
+                    using (var da = new SqlDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@courseid", courseid));
+                        cmd.Parameters.Add(new SqlParameter("@question", quiz.Quetion));
+                        cmd.Parameters.Add(new SqlParameter("@option1", quiz.Option1));
+                        cmd.Parameters.Add(new SqlParameter("@option2", quiz.Option2));
+                        cmd.Parameters.Add(new SqlParameter("@option3", quiz.Option3));
+                        cmd.Parameters.Add(new SqlParameter("@option4", quiz.Option4));
+                        cmd.Parameters.Add(new SqlParameter("@answer", quiz.answer));
+                        if (con.State == ConnectionState.Closed)
+                            con.Open();
+                        DataTable dt = new DataTable();
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            //handle errors
+                        }
+                        finally
+                        {
+                            con.Close();
+                        }
+                    }
+                }
+            }
+
+        }
     }
 }

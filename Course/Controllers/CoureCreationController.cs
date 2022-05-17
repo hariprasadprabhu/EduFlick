@@ -8,6 +8,7 @@ using Microsoft.Net.Http.Headers;
 using System.Net;
 using Course.Business;
 using FileHelpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Course.Controllers
 {
@@ -98,10 +99,25 @@ namespace Course.Controllers
             }
         }
         [HttpPost]
+        [Authorize]
         [Route("course/createquiz/{id:int}")]
-        public JsonResult CreateQuizz(Quiz[] quiz)
+        public JsonResult CreateQuizz(Quiz[] quiz,int id)
         {
-            return new JsonResult(quiz[0]);
+            CoursesBO cb = new CoursesBO();
+            if(cb.AddQuiz(quiz,id))
+            {
+                Success sc = new Success();
+                sc.id = 1;
+                sc.message = "Success";
+                return new JsonResult (sc);
+            }
+            else
+            {
+                Error sc = new Error();
+                sc.errId = 0;
+                sc.msg = "Something went wrong";
+                return new JsonResult(sc);
+            }
         }
     }
 }

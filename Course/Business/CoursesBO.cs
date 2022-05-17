@@ -21,5 +21,22 @@ namespace Course.Business
             string res = learnerDAC.UpdateCourseURL(id,url);
             return res;
         }
+        public bool AddQuiz(Quiz[] quiz,int courseId)
+        {
+            CoursesDAC learnerDAC = new CoursesDAC();
+            try
+            {
+                foreach (Quiz quizItem in quiz)
+                {
+                    learnerDAC.AddQuiz(quizItem, courseId);
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
