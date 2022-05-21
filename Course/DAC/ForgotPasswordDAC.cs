@@ -11,9 +11,80 @@ namespace Course.DAC
             var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
             this.conString = builder.GetSection("ConnectionStrings:DefaultConnection").Value;
         }
-        public bool IsEmailValid(string email,bool islearner)
+        public bool IsEmailValid(string emailorUSN,ref string email)
         {
-            return true;
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                using (SqlCommand cmd = new SqlCommand("usp_ValidateEmailUSN", con))
+                {
+                    using (var da = new SqlDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@emailorUSN", emailorUSN));
+                        if (con.State == ConnectionState.Closed)
+                            con.Open();
+                        string res = "";
+                        DataTable dt = new DataTable();
+                        try
+                        {
+                            da.Fill(dt);
+                            if (dt.Rows.Count == 0)
+                            {
+                                return false;
+                            }
+                            else
+                            {
+                                foreach (DataRow dr in dt.Rows)
+                                {
+                                    email = dr["email"].ToString();
+                                }
+                                return true;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            return false;
+                        }
+                        finally
+                        {
+                            con.Close();
+                        }
+                    }
+                }
+            }
+        }
+        
+        public bool ResetPassword(string email,string password)
+        {
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                using (SqlCommand cmd = new SqlCommand("usp_ResetPassword", con))
+                {
+                    using (var da = new SqlDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@emailorUSN", email));
+                        cmd.Parameters.Add(new SqlParameter("@newpassword", password));
+                        if (con.State == ConnectionState.Closed)
+                            con.Open();
+                        string res = "";
+                        DataTable dt = new DataTable();
+                        try
+                        {
+                            da.Fill(dt);
+                            return true;
+                        }
+                        catch (Exception ex)
+                        {
+                            return false;
+                        }
+                        finally
+                        {
+                            con.Close();
+                        }
+                    }
+                }
+            }
         }
 
         public bool updateSecreteCode(string email,int code)
@@ -34,14 +105,7 @@ namespace Course.DAC
                         try
                         {
                             da.Fill(dt);
-                            if (dt.Rows.Count == 0)
-                            {
-                                return false;
-                            }
-                            else
-                            {
-                                return true;
-                            }
+                            return true;
                         }
                         catch (Exception ex)
                         {

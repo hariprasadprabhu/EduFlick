@@ -12,6 +12,52 @@ namespace Course.DAC
             var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
             this.conString = builder.GetSection("ConnectionStrings:DefaultConnection").Value;
         }
+        public Courses[] GetCourses(int trainedId)
+        {
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                using (SqlCommand cmd = new SqlCommand("usp_GetCoursebyTrainerID", con))
+                {
+                    using (var da = new SqlDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@trainerId", trainedId));
+                        con.Open();
+                        string res = "";
+                        DataTable dt = new DataTable();
+
+                        try
+                        {
+                            da.Fill(dt);
+                            Courses[] courses = new Courses[dt.Rows.Count];
+                            if (dt.Rows.Count == 0)
+                            {
+                                return null;
+                            }
+                            else
+                            {
+                                int i = 0;
+                                foreach (DataRow dr in dt.Rows)
+                                {
+                                    courses[i++] = new Courses(int.Parse(dr["id"].ToString()), dr["coursename"].ToString(), int.Parse(dr["instructorId"].ToString()), dr["description"].ToString(), DateTime.Parse(dr["createdate"].ToString()), dr["url"].ToString());
+                                }
+                                return courses;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            //handle errors
+                        }
+                        finally
+                        {
+                            con.Close();
+                        }
+                        return null;
+                    }
+                }
+            }
+
+        }
         public string CreateCourse(Courses course)
         {
             using (SqlConnection con = new SqlConnection(conString))
@@ -49,6 +95,52 @@ namespace Course.DAC
                                         res = dr["err"].ToString();
                                 }
                                 return res;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            //handle errors
+                        }
+                        finally
+                        {
+                            con.Close();
+                        }
+                        return null;
+                    }
+                }
+            }
+
+        }
+        public Quiz[] GetQuiz(int courseId)
+        {
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                using (SqlCommand cmd = new SqlCommand("usp_GetQuizByCourseID", con))
+                {
+                    using (var da = new SqlDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@courseId", courseId));
+                            con.Open();
+                        string res = "";
+                        DataTable dt = new DataTable();
+                        
+                        try
+                        {
+                            da.Fill(dt);
+                            Quiz[] quiz = new Quiz[dt.Rows.Count];
+                            if (dt.Rows.Count == 0)
+                            {
+                                return null;
+                            }
+                            else
+                            {
+                                int i = 0;
+                                foreach (DataRow dr in dt.Rows)
+                                {
+                                    quiz[i++] = new Quiz(int.Parse(dr["id"].ToString()),dr["question"].ToString(), dr["option1"].ToString(), dr["option2"].ToString(), dr["option3"].ToString(), dr["option4"].ToString(), dr["answer"].ToString());
+                                }
+                                return quiz;
                             }
                         }
                         catch (Exception ex)

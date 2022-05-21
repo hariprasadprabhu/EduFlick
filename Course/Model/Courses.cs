@@ -2,6 +2,16 @@
 {
     public class Courses
     {
+        public Courses(int courseID, string courseName, int instructorId, string description, DateTime createdDate, string url)
+        {
+            CourseID = courseID;
+            CourseName = courseName;
+            InstructorId = instructorId;
+            Description = description;
+            CreatedDate = createdDate;
+            this.url = url;
+        }
+
         public Courses(int courseID, string courseName, int instructorId, string description, DateTime createdDate, double courseDuration,string url, int price)
         {
             CourseID = courseID;

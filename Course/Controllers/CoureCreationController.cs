@@ -69,6 +69,13 @@ namespace Course.Controllers
                 return new JsonResult(sc);
             }
         }
+        [HttpGet]
+        [Route("getcourses/{trainerId:int}")]
+        public JsonResult GetCourse(int trainerId)
+        {
+            CoursesBO cb = new CoursesBO();
+            return new JsonResult(cb.GetCourses(trainerId));
+        }
         [HttpPost]
         [Route("course/createcourse")]
         public JsonResult CreateCourse(Courses course)
@@ -118,6 +125,15 @@ namespace Course.Controllers
                 sc.msg = "Something went wrong";
                 return new JsonResult(sc);
             }
+        }
+        [HttpGet]
+        [Authorize]
+        [Route("course/getQuiz/{id:int}")]
+        public IEnumerable<Quiz> GetQuiz(int id)
+        {
+            CoursesBO cb = new CoursesBO();
+            Quiz[] abc= cb.GetQuiz(id);
+            return abc;
         }
     }
 }

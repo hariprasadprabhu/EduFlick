@@ -15,13 +15,18 @@ namespace Course.Business
             string res = learnerDAC.CreateCourse(course);
             return res;
         }
-        public string UpdateCourseURL(int id,string url)
+        public string UpdateCourseURL(int id, string url)
         {
             CoursesDAC learnerDAC = new CoursesDAC();
-            string res = learnerDAC.UpdateCourseURL(id,url);
+            string res = learnerDAC.UpdateCourseURL(id, url);
             return res;
         }
-        public bool AddQuiz(Quiz[] quiz,int courseId)
+        public Courses[] GetCourses(int trainerId)
+        {
+            CoursesDAC cd = new CoursesDAC();
+            return cd.GetCourses(trainerId);
+        }
+        public bool AddQuiz(Quiz[] quiz, int courseId)
         {
             CoursesDAC learnerDAC = new CoursesDAC();
             try
@@ -37,6 +42,11 @@ namespace Course.Business
             }
 
             return true;
+        }
+        public Quiz[] GetQuiz(int courseId)
+        {
+            CoursesDAC cd = new CoursesDAC();
+            return cd.GetQuiz(courseId);
         }
     }
 }
