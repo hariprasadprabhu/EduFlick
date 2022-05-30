@@ -15,10 +15,10 @@ namespace Course.Business
             string res = learnerDAC.CreateCourse(course);
             return res;
         }
-        public string UpdateCourseURL(int id, string url)
+        public string UpdateCourseURL(int id, string url,string thumbnail)
         {
             CoursesDAC learnerDAC = new CoursesDAC();
-            string res = learnerDAC.UpdateCourseURL(id, url);
+            string res = learnerDAC.UpdateCourseURL(id, url,thumbnail);
             return res;
         }
         public Courses[] GetCourses(int trainerId)

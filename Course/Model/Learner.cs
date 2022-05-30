@@ -22,7 +22,7 @@ namespace Course.Model
         public string Name { get; set; }
         public string Email { get; set; }
         public string USN { get; set; }
-        public string Username { get; set; }
+        public string Username { get; set; } = "None";
         public string Password { get; set; }
         public DateTime Dob { get; set; }
         public string Specialization { get; set; }

@@ -26,25 +26,31 @@ namespace Course.Controllers
         [RequestFormLimits(MultipartBodyLengthLimit = 409715200)]
         [RequestSizeLimit(409715200)]
         [Route("trainer/UploadFile/{id:int}")]
-        public JsonResult Upload([FromForm] IFormFile file,int id)
+        public JsonResult Upload([FromForm] IFormFile file, [FromForm] IFormFile thumbnail, int id)
         {
             try
             {
                 int b = id;
                 // getting file original name
                 string FileName = file.FileName;
+                string thumbnailName = thumbnail.FileName;
+
 
                 // combining GUID to create unique name before saving in wwwroot
                 string uniqueFileName = Guid.NewGuid().ToString() + "_" + FileName;
+                string uniquethumbnailName = Guid.NewGuid().ToString() + "_" + thumbnailName;
 
                 string halfpath = "Uploads/" + uniqueFileName;
+                string thumbnailhalfpath = "Uploads/" + uniquethumbnailName;
                 // getting full path inside wwwroot/images
                 var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot",halfpath);
+                var thumbnailpath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot",thumbnailhalfpath);
 
                 // copying file
                 file.CopyTo(new FileStream(imagePath, FileMode.Create));
+                thumbnail.CopyTo(new FileStream(thumbnailpath, FileMode.Create));
                 CoursesBO cBo = new CoursesBO();
-                string res = cBo.UpdateCourseURL(id, halfpath);
+                string res = cBo.UpdateCourseURL(id, halfpath,thumbnailhalfpath);
                 Success sc = new Success();
                 try
                 {

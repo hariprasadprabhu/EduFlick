@@ -39,7 +39,7 @@ namespace Course.DAC
                                 int i = 0;
                                 foreach (DataRow dr in dt.Rows)
                                 {
-                                    courses[i++] = new Courses(int.Parse(dr["id"].ToString()), dr["coursename"].ToString(), int.Parse(dr["instructorId"].ToString()), dr["description"].ToString(), DateTime.Parse(dr["createdate"].ToString()), dr["url"].ToString());
+                                    courses[i++] = new Courses(int.Parse(dr["id"].ToString()), dr["coursename"].ToString(), int.Parse(dr["instructorId"].ToString()), dr["description"].ToString(), DateTime.Parse(dr["createdate"].ToString()), dr["url"].ToString(), dr["thumbnail"].ToString(), (dr["topics"].ToString()).Split(',').ToArray()); 
                                 }
                                 return courses;
                             }
@@ -66,14 +66,16 @@ namespace Course.DAC
                 {
                     using (var da = new SqlDataAdapter(cmd))
                     {
+                        string abc = string.Join(",", course.topics);
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.Add(new SqlParameter("@courseName", course.CourseName));
                         cmd.Parameters.Add(new SqlParameter("@description", course.Description));
                         cmd.Parameters.Add(new SqlParameter("@instructorId", course.InstructorId));
                         cmd.Parameters.Add(new SqlParameter("@createDate", course.CreatedDate));
                         cmd.Parameters.Add(new SqlParameter("@courseDuration", course.CourseDuration));
-                        cmd.Parameters.Add(new SqlParameter("@price", course.price));
                         cmd.Parameters.Add(new SqlParameter("@url", course.url));
+                        cmd.Parameters.Add(new SqlParameter("@thumbnail", ""));
+                        cmd.Parameters.Add(new SqlParameter("@topics", string.Join(",", course.topics) ));
                         if (con.State == ConnectionState.Closed)
                             con.Open();
                         string res = "";
@@ -157,7 +159,7 @@ namespace Course.DAC
             }
 
         }
-        public string UpdateCourseURL(int courseId,string url)
+        public string UpdateCourseURL(int courseId,string url,string thumbnail)
         {
             using (SqlConnection con = new SqlConnection(conString))
             {
@@ -168,6 +170,7 @@ namespace Course.DAC
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.Add(new SqlParameter("@courseId", courseId));
                         cmd.Parameters.Add(new SqlParameter("@url", url));
+                        cmd.Parameters.Add(new SqlParameter("@thumbnail", thumbnail));
                         if (con.State == ConnectionState.Closed)
                             con.Open();
                         string res = "";
