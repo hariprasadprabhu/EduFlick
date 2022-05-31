@@ -1,4 +1,5 @@
 ﻿using Course.Model;
+using Course.Model.RequestResponse;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -107,6 +108,51 @@ namespace Course.DAC
                 }
             }
         }
+        public Trainers[] GetTrainers(int learnerId)
+        {
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                using (SqlCommand cmd = new SqlCommand("usp_GetTrainerByLearnerId", con))
+                {
+                    using (var da = new SqlDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@learnerId", learnerId));
+                        con.Open();
+                        string res = "";
+                        DataTable dt = new DataTable();
 
+                        try
+                        {
+                            da.Fill(dt);
+                            Trainers[] trainers = new Trainers[dt.Rows.Count];
+                            if (dt.Rows.Count == 0)
+                            {
+                                return null;
+                            }
+                            else
+                            {
+                                int i = 0;
+                                foreach (DataRow dr in dt.Rows)
+                                {
+                                    trainers[i++] = new Trainers(int.Parse(dr["id"].ToString()), dr["name"].ToString(), dr["specialization1"].ToString(), dr["specialization2"].ToString(), dr["specialization3"].ToString(), DateTime.Parse(dr["DateofJoining"].ToString()), int.Parse(dr["yearsOfExp"].ToString()), dr["email"].ToString(), dr["phone"].ToString(), DateTime.Parse(dr["createdate"].ToString()), int.Parse(dr["isSubscribed"].ToString()));
+                                }
+                                return trainers;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            //handle errors
+                        }
+                        finally
+                        {
+                            con.Close();
+                        }
+                        return null;
+                    }
+                }
+            }
+
+        }
     }
 }

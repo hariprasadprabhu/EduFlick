@@ -1,5 +1,6 @@
 ﻿using Course.DAC;
 using Course.Model;
+using Course.Model.RequestResponse;
 
 namespace Course.Business
 {
@@ -26,6 +27,21 @@ namespace Course.Business
             CoursesDAC cd = new CoursesDAC();
             return cd.GetCourses(trainerId);
         }
+        public Courses[] GetSubscribedCourses(int learnerId)
+        {
+            CoursesDAC cd = new CoursesDAC();
+            return cd.GetSubscribedCourses(learnerId);
+        }
+        public Trainers[] SearchTrainer(string searchElement,int learnerId)
+        {
+            CoursesDAC cd = new CoursesDAC();
+            return cd.SearchTrainerWithSearchElement(searchElement, learnerId);
+        }
+        public Courses[] GetCompletedCourses(int learnerId)
+        {
+            CoursesDAC cd = new CoursesDAC();
+            return cd.GetCompletedCourses(learnerId);
+        }
         public bool AddQuiz(Quiz[] quiz, int courseId)
         {
             CoursesDAC learnerDAC = new CoursesDAC();
@@ -35,6 +51,20 @@ namespace Course.Business
                 {
                     learnerDAC.AddQuiz(quizItem, courseId);
                 }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        public bool UpdateCompleteionStatus(int courseId, int learnerId, string score)
+        {
+            CoursesDAC learnerDAC = new CoursesDAC();
+            try
+            {
+                learnerDAC.UpdateCourseCompletion(courseId, learnerId, score);
             }
             catch (Exception ex)
             {

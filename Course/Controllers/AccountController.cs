@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Course.Model;
 using Course.Business;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Course.Controllers
 {
@@ -14,11 +15,19 @@ namespace Course.Controllers
         public IActionResult Login(LoginRequest loginrequest)
         {
             var jwtautheticationManager = new JWTAuthenticationManager();
-            var authRes = jwtautheticationManager.AuthenticateLearner(loginrequest.usn,loginrequest.password);
-            if( authRes == null )
+            var authRes = jwtautheticationManager.AuthenticateLearner(loginrequest.usn, loginrequest.password);
+            if (authRes == null)
                 return Unauthorized();
             return Ok(authRes);
 
+        }
+        [HttpGet]
+        [Route("getTrainers/{learnerId:int}")]
+        [Authorize]
+        public JsonResult GetTrainers(int learnerId)
+        {
+            LearnersAuth learnersAuth = new LearnersAuth();
+            return new JsonResult(learnersAuth.GetTrainers(learnerId));
         }
         [HttpPost]  
         [Route("learner/RegisterLearner")]

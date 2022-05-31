@@ -82,6 +82,27 @@ namespace Course.Controllers
             CoursesBO cb = new CoursesBO();
             return new JsonResult(cb.GetCourses(trainerId));
         }
+        [HttpGet]
+        [Route("getSubscribedcourses/{learnerId:int}")]
+        public JsonResult GetSubscribedCourse(int learnerId)
+        {
+            CoursesBO cb = new CoursesBO();
+            return new JsonResult(cb.GetSubscribedCourses(learnerId));
+        }
+        [HttpPost]
+        [Route("GetSearchResults/{learnerId:int}")]
+        public JsonResult GetSubscribedCourse([FromForm] string searchElement,int learnerId)
+        {
+            CoursesBO cb = new CoursesBO();
+            return new JsonResult(cb.SearchTrainer(searchElement, learnerId));
+        }
+        [HttpGet]
+        [Route("getCompletedcourses/{learnerId:int}")]
+        public JsonResult GetCompletedCourse(int learnerId)
+        {
+            CoursesBO cb = new CoursesBO();
+            return new JsonResult(cb.GetCompletedCourses(learnerId));
+        }
         [HttpPost]
         [Route("course/createcourse")]
         public JsonResult CreateCourse(Courses course)
@@ -129,6 +150,27 @@ namespace Course.Controllers
                 Error sc = new Error();
                 sc.errId = 0;
                 sc.msg = "Something went wrong";
+                return new JsonResult(sc);
+            }
+        }
+        [HttpPost]
+        [Authorize]
+        [Route("course/updatecoursecompletion")]
+        public JsonResult UpdateCompletetionCourse([FromForm] int courseId,[FromForm] int learnerId,[FromForm] string score)
+        {
+            CoursesBO cb = new CoursesBO();
+            if (cb.UpdateCompleteionStatus(courseId,learnerId,score))
+            {
+                Success sc = new Success();
+                sc.id = 1;
+                sc.message = "Success";
+                return new JsonResult(sc);
+            }
+            else
+            {
+                Success sc = new Success();
+                sc.id = 0;
+                sc.message = "Failed";
                 return new JsonResult(sc);
             }
         }

@@ -1,4 +1,5 @@
 ﻿using Course.Model;
+using Course.Model.RequestResponse;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -40,6 +41,146 @@ namespace Course.DAC
                                 foreach (DataRow dr in dt.Rows)
                                 {
                                     courses[i++] = new Courses(int.Parse(dr["id"].ToString()), dr["coursename"].ToString(), int.Parse(dr["instructorId"].ToString()), dr["description"].ToString(), DateTime.Parse(dr["createdate"].ToString()), dr["url"].ToString(), dr["thumbnail"].ToString(), (dr["topics"].ToString()).Split(',').ToArray()); 
+                                }
+                                return courses;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            //handle errors
+                        }
+                        finally
+                        {
+                            con.Close();
+                        }
+                        return null;
+                    }
+                }
+            }
+
+        }
+
+        public Trainers[] SearchTrainerWithSearchElement(string searchElement,int learnerId)
+        {
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                using (SqlCommand cmd = new SqlCommand("usp_SearchTrainer", con))
+                {
+                    using (var da = new SqlDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@searchelement", searchElement));
+                        cmd.Parameters.Add(new SqlParameter("@learnerId", learnerId));
+                        con.Open();
+                        string res = "";
+                        DataTable dt = new DataTable();
+
+                        try
+                        {
+                            da.Fill(dt);
+                            Trainers[] trainer = new Trainers[dt.Rows.Count];
+                            if (dt.Rows.Count == 0)
+                            {
+                                return null;
+                            }
+                            else
+                            {
+                                int i = 0;
+                                foreach (DataRow dr in dt.Rows)
+                                {
+                                    trainer[i++] = new Trainers(int.Parse(dr["id"].ToString()), dr["name"].ToString(), dr["specialization1"].ToString(), dr["specialization2"].ToString(), dr["specialization3"].ToString(), DateTime.Parse(dr["DateofJoining"].ToString()), int.Parse(dr["yearsOfExp"].ToString()), dr["email"].ToString(),dr["phone"].ToString(), DateTime.Parse(dr["createdate"].ToString()), int.Parse(dr["isSubscribed"].ToString()));
+                                }
+                                return trainer;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            //handle errors
+                        }
+                        finally
+                        {
+                            con.Close();
+                        }
+                        return null;
+                    }
+                }
+            }
+
+        }
+        public Courses[] GetSubscribedCourses(int learnerId)
+        {
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                using (SqlCommand cmd = new SqlCommand("usp_GetCoursebyLearnerID", con))
+                {
+                    using (var da = new SqlDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@Learnerid", learnerId));
+                        con.Open();
+                        string res = "";
+                        DataTable dt = new DataTable();
+
+                        try
+                        {
+                            da.Fill(dt);
+                            Courses[] courses = new Courses[dt.Rows.Count];
+                            if (dt.Rows.Count == 0)
+                            {
+                                return null;
+                            }
+                            else
+                            {
+                                int i = 0;
+                                foreach (DataRow dr in dt.Rows)
+                                {
+                                    courses[i++] = new Courses(int.Parse(dr["id"].ToString()), dr["coursename"].ToString(), int.Parse(dr["instructorId"].ToString()), dr["description"].ToString(), DateTime.Parse(dr["createdate"].ToString()), dr["url"].ToString(), dr["thumbnail"].ToString(), (dr["topics"].ToString()).Split(',').ToArray());
+                                }
+                                return courses;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            //handle errors
+                        }
+                        finally
+                        {
+                            con.Close();
+                        }
+                        return null;
+                    }
+                }
+            }
+
+        }
+        public Courses[] GetCompletedCourses(int learnerId)
+        {
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                using (SqlCommand cmd = new SqlCommand("usp_GetCompletedCoursebyLearnerID", con))
+                {
+                    using (var da = new SqlDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@Learnerid", learnerId));
+                        con.Open();
+                        string res = "";
+                        DataTable dt = new DataTable();
+
+                        try
+                        {
+                            da.Fill(dt);
+                            Courses[] courses = new Courses[dt.Rows.Count];
+                            if (dt.Rows.Count == 0)
+                            {
+                                return null;
+                            }
+                            else
+                            {
+                                int i = 0;
+                                foreach (DataRow dr in dt.Rows)
+                                {
+                                    courses[i++] = new Courses(int.Parse(dr["id"].ToString()), dr["coursename"].ToString(), int.Parse(dr["instructorId"].ToString()), dr["description"].ToString(), DateTime.Parse(dr["createdate"].ToString()), dr["url"].ToString(), dr["thumbnail"].ToString(), (dr["topics"].ToString()).Split(',').ToArray());
                                 }
                                 return courses;
                             }
@@ -206,7 +347,6 @@ namespace Course.DAC
                     }
                 }
             }
-
         }
         public void AddQuiz(Quiz quiz,int courseid)
         {
@@ -224,6 +364,38 @@ namespace Course.DAC
                         cmd.Parameters.Add(new SqlParameter("@option3", quiz.Option3));
                         cmd.Parameters.Add(new SqlParameter("@option4", quiz.Option4));
                         cmd.Parameters.Add(new SqlParameter("@answer", quiz.answer));
+                        if (con.State == ConnectionState.Closed)
+                            con.Open();
+                        DataTable dt = new DataTable();
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            //handle errors
+                        }
+                        finally
+                        {
+                            con.Close();
+                        }
+                    }
+                }
+            }
+
+        }
+        public void UpdateCourseCompletion(int courseId,int learnerId,string score)
+        {
+            using (SqlConnection con = new SqlConnection(conString))
+            {
+                using (SqlCommand cmd = new SqlCommand("usp_updateCourseCompletion", con))
+                {
+                    using (var da = new SqlDataAdapter(cmd))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add(new SqlParameter("@courseId", courseId));
+                        cmd.Parameters.Add(new SqlParameter("@learnerId", learnerId));
+                        cmd.Parameters.Add(new SqlParameter("@score", score));
                         if (con.State == ConnectionState.Closed)
                             con.Open();
                         DataTable dt = new DataTable();
