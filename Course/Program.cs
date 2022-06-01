@@ -8,6 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "AllowOrigin",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:3000", "https://localhost:3000")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+        });
+});
 builder.Services.Configure<FormOptions>(options =>
 {
     options.MemoryBufferThreshold = int.MaxValue; //default 1024
@@ -46,6 +56,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("AllowOrigin");
 
 //app.UseFileServer(new FileServerOptions
 //{

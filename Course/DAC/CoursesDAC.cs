@@ -40,7 +40,7 @@ namespace Course.DAC
                                 int i = 0;
                                 foreach (DataRow dr in dt.Rows)
                                 {
-                                    courses[i++] = new Courses(int.Parse(dr["id"].ToString()), dr["coursename"].ToString(), int.Parse(dr["instructorId"].ToString()), dr["description"].ToString(), DateTime.Parse(dr["createdate"].ToString()), dr["url"].ToString(), dr["thumbnail"].ToString(), (dr["topics"].ToString()).Split(',').ToArray()); 
+                                    courses[i++] = new Courses(int.Parse(dr["id"].ToString()), dr["coursename"].ToString(), int.Parse(dr["instructorId"].ToString()), dr["description"].ToString(), DateTime.Parse(dr["createdate"].ToString()), int.Parse(dr["courseduration"].ToString()), dr["url"].ToString(), dr["thumbnail"].ToString(), (dr["topics"].ToString()).Split(',').ToArray()); 
                                 }
                                 return courses;
                             }
@@ -134,7 +134,7 @@ namespace Course.DAC
                                 int i = 0;
                                 foreach (DataRow dr in dt.Rows)
                                 {
-                                    courses[i++] = new Courses(int.Parse(dr["id"].ToString()), dr["coursename"].ToString(), int.Parse(dr["instructorId"].ToString()), dr["description"].ToString(), DateTime.Parse(dr["createdate"].ToString()), dr["url"].ToString(), dr["thumbnail"].ToString(), (dr["topics"].ToString()).Split(',').ToArray());
+                                    courses[i++] = new Courses(int.Parse(dr["id"].ToString()), dr["coursename"].ToString(), int.Parse(dr["instructorId"].ToString()), dr["description"].ToString(), DateTime.Parse(dr["createdate"].ToString()), int.Parse(dr["courseduration"].ToString()), dr["url"].ToString(), dr["thumbnail"].ToString(), (dr["topics"].ToString()).Split(',').ToArray());
                                 }
                                 return courses;
                             }
@@ -180,7 +180,7 @@ namespace Course.DAC
                                 int i = 0;
                                 foreach (DataRow dr in dt.Rows)
                                 {
-                                    courses[i++] = new Courses(int.Parse(dr["id"].ToString()), dr["coursename"].ToString(), int.Parse(dr["instructorId"].ToString()), dr["description"].ToString(), DateTime.Parse(dr["createdate"].ToString()), dr["url"].ToString(), dr["thumbnail"].ToString(), (dr["topics"].ToString()).Split(',').ToArray());
+                                    courses[i++] = new Courses(int.Parse(dr["id"].ToString()), dr["coursename"].ToString(), int.Parse(dr["instructorId"].ToString()), dr["description"].ToString(), DateTime.Parse(dr["createdate"].ToString()), int.Parse(dr["courseduration"].ToString()), dr["url"].ToString(), dr["thumbnail"].ToString(), (dr["topics"].ToString()).Split(',').ToArray());
                                 }
                                 return courses;
                             }
@@ -212,7 +212,6 @@ namespace Course.DAC
                         cmd.Parameters.Add(new SqlParameter("@courseName", course.CourseName));
                         cmd.Parameters.Add(new SqlParameter("@description", course.Description));
                         cmd.Parameters.Add(new SqlParameter("@instructorId", course.InstructorId));
-                        cmd.Parameters.Add(new SqlParameter("@createDate", course.CreatedDate));
                         cmd.Parameters.Add(new SqlParameter("@courseDuration", course.CourseDuration));
                         cmd.Parameters.Add(new SqlParameter("@url", course.url));
                         cmd.Parameters.Add(new SqlParameter("@thumbnail", ""));
@@ -358,7 +357,7 @@ namespace Course.DAC
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.Add(new SqlParameter("@courseid", courseid));
-                        cmd.Parameters.Add(new SqlParameter("@question", quiz.Quetion));
+                        cmd.Parameters.Add(new SqlParameter("@question", quiz.Question));
                         cmd.Parameters.Add(new SqlParameter("@option1", quiz.Option1));
                         cmd.Parameters.Add(new SqlParameter("@option2", quiz.Option2));
                         cmd.Parameters.Add(new SqlParameter("@option3", quiz.Option3));

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Course.Model;
 using Course.Business;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 
 namespace Course.Controllers
 {
@@ -10,6 +11,7 @@ namespace Course.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
+        [EnableCors("AllowOrigin")]
         [HttpPost]
         [Route("learner/Login")]
         public IActionResult Login(LoginRequest loginrequest)
@@ -23,7 +25,6 @@ namespace Course.Controllers
         }
         [HttpGet]
         [Route("getTrainers/{learnerId:int}")]
-        [Authorize]
         public JsonResult GetTrainers(int learnerId)
         {
             LearnersAuth learnersAuth = new LearnersAuth();

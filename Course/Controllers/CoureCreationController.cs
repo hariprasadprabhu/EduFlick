@@ -133,7 +133,6 @@ namespace Course.Controllers
             }
         }
         [HttpPost]
-        [Authorize]
         [Route("course/createquiz/{id:int}")]
         public JsonResult CreateQuizz(Quiz[] quiz,int id)
         {
@@ -154,7 +153,6 @@ namespace Course.Controllers
             }
         }
         [HttpPost]
-        [Authorize]
         [Route("course/updatecoursecompletion")]
         public JsonResult UpdateCompletetionCourse([FromForm] int courseId,[FromForm] int learnerId,[FromForm] string score)
         {
@@ -175,7 +173,6 @@ namespace Course.Controllers
             }
         }
         [HttpGet]
-        [Authorize]
         [Route("course/getQuiz/{id:int}")]
         public IEnumerable<Quiz> GetQuiz(int id)
         {
