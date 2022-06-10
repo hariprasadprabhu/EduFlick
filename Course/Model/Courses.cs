@@ -14,6 +14,19 @@
             this.thumbnail = thumnail;
             this.topics = topics;
         }
+        public Courses(int courseID, string courseName, int instructorId, string description, DateTime createdDate, int CourseDuration, string url, string thumnail, string[] topics,string InstructorName)
+        {
+            CourseID = courseID;
+            CourseName = courseName;
+            InstructorId = instructorId;
+            Description = description;
+            CreatedDate = createdDate;
+            this.CourseDuration = CourseDuration;
+            this.url = url;
+            this.thumbnail = thumnail;
+            this.topics = topics;
+            this.InstructorName = InstructorName;
+        }
 
         public Courses()
         {
@@ -23,6 +36,7 @@
         public int CourseID { get; set; }
         public string CourseName { get; set; }
         public int InstructorId { get; set; }
+        public string InstructorName { get; set; } = "";
         public string Description { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         public int CourseDuration { get; set; }=0;

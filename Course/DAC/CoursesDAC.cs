@@ -134,7 +134,7 @@ namespace Course.DAC
                                 int i = 0;
                                 foreach (DataRow dr in dt.Rows)
                                 {
-                                    courses[i++] = new Courses(int.Parse(dr["id"].ToString()), dr["coursename"].ToString(), int.Parse(dr["instructorId"].ToString()), dr["description"].ToString(), DateTime.Parse(dr["createdate"].ToString()), int.Parse(dr["courseduration"].ToString()), dr["url"].ToString(), dr["thumbnail"].ToString(), (dr["topics"].ToString()).Split(',').ToArray());
+                                    courses[i++] = new Courses(int.Parse(dr["id"].ToString()), dr["coursename"].ToString(), int.Parse(dr["instructorId"].ToString()), dr["description"].ToString(), DateTime.Parse(dr["createdate"].ToString()), int.Parse(dr["courseduration"].ToString()), dr["url"].ToString(), dr["thumbnail"].ToString(), (dr["topics"].ToString()).Split(',').ToArray(), dr["name"].ToString());
                                 }
                                 return courses;
                             }
